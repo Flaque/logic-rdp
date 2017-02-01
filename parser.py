@@ -1,6 +1,5 @@
 #
 # A recursive descent parser for logic
-# By: Evan Conrad
 #
 # --------------------------------------------
 # S : PROP | LOG | NEG | AND | OR | IMPL | EQ
@@ -12,7 +11,7 @@
 # IMPL : S impl S
 # EQ : S = S
 # --------------------------------------------
-#
+
 
 # Create an Enum vocabulary
 from enum import Enum
