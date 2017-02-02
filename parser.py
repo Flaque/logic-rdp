@@ -55,11 +55,19 @@ parser = Parser()
 assert parser.run("a")        == True
 assert parser.run("a  ")      == True
 assert parser.run("  z")      == True
+assert parser.run("b   or a") == True
+
 assert parser.run("b and a")  == True
-assert parser.run("band a")   == False
 assert parser.run("b impl a") == True
 assert parser.run("z or a")   == True
 assert parser.run("z = a")    == True
+assert parser.run("z = true") == True
+assert parser.run("false")    == True
+
+assert parser.run("band a")   == False
+assert parser.run("b blah a") == False
+assert parser.run("1 and 2")  == False
+
 
 
 print "Passed Tests!"
