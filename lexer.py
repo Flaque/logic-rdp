@@ -2,10 +2,10 @@ from token import Token
 
 class Lexer:
 
-    __init__(self, string):
-        self.tokens = string.split(' ') # Tokens must be split by spaces
+    def __init__(self, string):
+        self.tokens = string.strip().split(' ') # Tokens must be split by spaces
 
-    nextToken(self):
+    def nextToken(self):
 
         # End of file!
         if not self.tokens:
@@ -13,6 +13,11 @@ class Lexer:
 
         # Grab next token
         tok = self.tokens.pop(0)
+
+        # Ignore empty strings that can happen if the user puts too many
+        # spaces in between their tokens
+        if tok == "":
+            return self.nextToken()
 
         if len(tok) == 1 and tok.isalpha():
             return Token.PROP
