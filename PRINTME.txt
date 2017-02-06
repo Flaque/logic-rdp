@@ -1,0 +1,221 @@
+#
+#  Programmers: Evan Conrad, Abdullah Alhassan, Sebastien, Andrea
+#  filename:    main.py
+#  Date:        02/06/2017
+#  Class:       Artificial Intelegence CPSC 427
+#  Description:
+#
+#          This program is Recursive Descent Parser for proposetional calculus. It will prompt
+#          the user for raw_input, then decides wheather the syntax of the proposetional is
+#          is valid or not. The symbols used in this program are shown below:
+#
+#            ----------------------------------------------
+#            S    : PROP | LOG | NEG | AND | OR | IMPL | EQ
+#            PROP : a | b | c | ... | z
+#            LOG  : true | false
+#            NEG  : not S
+#            AND  : S and S
+#            OR   : S or S
+#            IMPL : S impl S
+#            EQ   : S = S
+#            ----------------------------------------------
+#
+
+from parser import Parser
+
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
+
+grammar = """
+----------------------------------------------
+S    : PROP | LOG | NEG | AND | OR | IMPL | EQ
+PROP : a | b | c | ... | z
+LOG  : true | false
+NEG  : not S
+AND  : S and S
+OR   : S or S
+IMPL : S impl S
+EQ   : S = S
+----------------------------------------------
+
+"""
+
+parser = Parser()
+header = bcolors.HEADER + "Welcome to our A+ worthy parser!\n" + bcolors.ENDC
+prompt = header + """You can either:
+1. Enter a string you would like to parse.
+2. Enter "grammar" to see the language grammar
+3. Enter "end" to quit.
+
+type your input below:
+"""
+
+user_input = ""
+
+while user_input != "end":
+    user_input = raw_input(prompt)
+    if user_input == "end":
+        print bcolors.OKBLUE + "bye!" + bcolors.ENDC
+        break
+
+    if user_input == "grammar":
+        print grammar
+        continue
+
+    isCorrect = parser.run(user_input)
+    if isCorrect:
+        print bcolors.OKGREEN + "\nAnswer: yes\n" + bcolors.ENDC
+    else:
+        print bcolors.FAIL + "\nAnswer: no\n" + bcolors.ENDC
+
+
+#
+#  Programmers: Evan Conrad, Abdullah Alhassan, Sebastien, Andrea
+#  filename:    lexer.py
+#  Date:        02/06/2017
+#  Class:       Artificial Intelegence CPSC 427
+#
+from token import Token
+
+class Lexer:
+
+    def __init__(self, string):
+        self.tokens = string.strip().split(' ') # Tokens must be split by spaces
+
+    def nextToken(self):
+
+        # End of file!
+        if not self.tokens:
+            return Token.END
+
+        # Grab next token
+        tok = self.tokens.pop(0)
+
+        # Ignore empty strings that can happen if the user puts too many
+        # spaces in between their tokens
+        if tok == "":
+            return self.nextToken()
+
+        if len(tok) == 1 and tok.isalpha():
+            return Token.PROP
+        if tok == "true" or tok == "false":
+            return Token.LOG
+        if tok == "not":
+            return Token.NEG
+        if tok == "and":
+            return Token.AND
+        if tok == "or":
+            return Token.OR
+        if tok == "impl":
+            return Token.IMPL
+        if tok == "=":
+            return Token.EQ
+        else:
+            return None # Undefined
+
+
+#
+#  Programmers: Evan Conrad, Abdullah Alhassan, Sebastien, Andrea
+#  filename:    parser.py
+#  Date:        02/06/2017
+#  Class:       Artificial Intelegence CPSC 427
+#
+# A recursive descent parser for logic
+#
+# --------------------------------------------
+# S : PROP | LOG | NEG | AND | OR | IMPL | EQ
+# PROP : a | b | c | ... | z
+# LOG : true | false
+# NEG : not S
+# AND : S and S
+# OR : S or S
+# IMPL : S impl S
+# EQ : S = S
+# --------------------------------------------
+
+from token import Token
+from lexer import Lexer
+
+class Parser():
+
+    def __init__(self):
+        self.lexer = None
+        self.tok = None
+
+    def nextToken(self):
+        self.tok = self.lexer.nextToken()
+
+    def expect(self, token_type):
+        self.nextToken()
+        if self.tok != token_type:
+            raise "was expecting a %s" % (token_type)
+
+    def run(self, string):
+        self.lexer = Lexer(string)
+        return self.S()
+
+    def S(self):
+        self.nextToken()
+        if self.tok is not Token.END:
+            if not self.tok:
+                return False # Something went wrong!
+
+            return self.S()
+
+        else:
+            return True; # We got to the end of the file with no problems!
+
+parser = Parser()
+
+# Test whitespace
+assert parser.run("a")        == True
+assert parser.run("a  ")      == True
+assert parser.run("  z")      == True
+assert parser.run("b   or a") == True
+
+# Test tokens
+assert parser.run("b and a")  == True
+assert parser.run("b impl a") == True
+assert parser.run("z or a")   == True
+assert parser.run("z = a")    == True
+assert parser.run("z = true") == True
+assert parser.run("false")    == True
+assert parser.run("not a")    == True
+
+# Test failure cases
+assert parser.run("band a")   == False
+assert parser.run("b blah a") == False
+assert parser.run("1 and 2")  == False
+
+# Test blocks
+assert parser.run("a or b and c")        == True
+assert parser.run("a impl b and c or z") == True
+
+
+#
+#  Programmers: Evan Conrad, Abdullah Alhassan, Sebastien, Andrea
+#  filename:    token.py
+#  Date:        02/06/2017
+#  Class:       Artificial Intelegence CPSC 427
+#
+
+# Create an Enum vocabulary
+from enum import Enum
+class Token(Enum):
+    S = 1
+    PROP = 2
+    LOG = 3
+    NEG = 4
+    AND = 5
+    OR = 6
+    IMPL = 7
+    EQ = 8
+    END = 9
