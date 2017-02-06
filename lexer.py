@@ -1,3 +1,9 @@
+#
+#  Programmers: Evan Conrad, Abdullah Alhassan, Sebastien, Andrea
+#  filename:    lexer.py
+#  Date:        02/06/2017
+#  Class:       Artificial Intelegence CPSC 427
+#
 from token import Token
 
 class Lexer:

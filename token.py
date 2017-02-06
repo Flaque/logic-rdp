@@ -1,3 +1,10 @@
+#
+#  Programmers: Evan Conrad, Abdullah Alhassan, Sebastien, Andrea
+#  filename:    token.py
+#  Date:        02/06/2017
+#  Class:       Artificial Intelegence CPSC 427
+#
+
 # Create an Enum vocabulary
 from enum import Enum
 class Token(Enum):

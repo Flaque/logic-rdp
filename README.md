@@ -1,6 +1,8 @@
 
 # A recursive descent parser for logic
 
+By Evan Conrad, Abdullah Alhassan, Sebastien, Andrea
+
 ## Logic Rules
 
 ```
@@ -13,3 +15,7 @@ OR   : S or S
 IMPL : S impl S
 EQ   : S = S
 ```
+
+## To use
+
+Run `python main.py` to test out our parser!

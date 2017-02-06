@@ -1,3 +1,26 @@
+#
+#  Programmers: Evan Conrad, Abdullah Alhassan, Sebastien, Andrea
+#  filename:    main.py
+#  Date:        02/06/2017
+#  Class:       Artificial Intelegence CPSC 427
+#  Description:
+#
+#          This program is Recursive Descent Parser for proposetional calculus. It will prompt
+#          the user for raw_input, then decides wheather the syntax of the proposetional is
+#          is valid or not. The symbols used in this program are shown below:
+#
+#            ----------------------------------------------
+#            S    : PROP | LOG | NEG | AND | OR | IMPL | EQ
+#            PROP : a | b | c | ... | z
+#            LOG  : true | false
+#            NEG  : not S
+#            AND  : S and S
+#            OR   : S or S
+#            IMPL : S impl S
+#            EQ   : S = S
+#            ----------------------------------------------
+#
+
 from parser import Parser
 
 class bcolors:

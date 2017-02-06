@@ -1,4 +1,9 @@
 #
+#  Programmers: Evan Conrad, Abdullah Alhassan, Sebastien, Andrea
+#  filename:    parser.py
+#  Date:        02/06/2017
+#  Class:       Artificial Intelegence CPSC 427
+#
 # A recursive descent parser for logic
 #
 # --------------------------------------------
@@ -33,19 +38,12 @@ class Parser():
         self.lexer = Lexer(string)
         return self.S()
 
-    def NEG(self):
-        self.S()
-
     def S(self):
         self.nextToken()
         if self.tok is not Token.END:
             if not self.tok:
                 return False # Something went wrong!
 
-                if self.tok == Token.NEG:
-                    self.NEG()
-                if self.tok == Token.AND or self.tok == Token.OR or self.tok == Token.IMPL or self.tok == Token.EQ:
-                    self.S()
             return self.S()
 
         else:
@@ -66,6 +64,7 @@ assert parser.run("z or a")   == True
 assert parser.run("z = a")    == True
 assert parser.run("z = true") == True
 assert parser.run("false")    == True
+assert parser.run("not a")    == True
 
 # Test failure cases
 assert parser.run("band a")   == False
